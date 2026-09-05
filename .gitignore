@@ -1,6 +1,7 @@
 # Java / Maven
 backend/target/
 backend/.mvn/
+backend/*maven*.zip
 backend/appmusica-data.json
 backend/*.log
 

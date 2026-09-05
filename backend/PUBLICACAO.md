@@ -44,3 +44,27 @@ O backend agora armazena senhas com BCrypt, usa JWT com expiracao e rejeita toke
 5. Configure `APP_CORS_ORIGINS` no backend com a URL gerada pelo GitHub Pages, por exemplo `https://usuario.github.io/appmusica`.
 
 O GitHub Pages nao executa o Spring Boot. O backend precisa estar hospedado separadamente e o repositorio nao deve conter `appmusica-data.json`, senhas ou segredos.
+
+## Backend no Render usando Docker
+
+1. Crie uma conta em `render.com` e escolha `New > Web Service`.
+2. Conecte o repositorio GitHub.
+3. Em `Root Directory`, informe `backend`.
+4. Escolha `Docker` como ambiente.
+5. Configure as variaveis `APP_JWT_SECRET` e `APP_CORS_ORIGINS` no painel do Render.
+6. Use como `APP_CORS_ORIGINS` a URL do GitHub Pages, sem barra final.
+7. Copie a URL HTTPS gerada pelo Render para `frontend/config.js`:
+
+```javascript
+window.APP_CONFIG = {
+	API_BASE: "https://seu-backend.onrender.com/api",
+};
+```
+
+8. Faca commit e push. O workflow atualizara o frontend.
+
+O arquivo `backend/Dockerfile` ja esta preparado para esse deploy. No plano gratuito, o servico pode dormir e o armazenamento local pode ser perdido ao reiniciar; para guardar contas e musicas de verdade, use PostgreSQL e armazenamento de objetos.
+
+## Executar baixado no Windows
+
+O arquivo `INICIAR-APP.bat`, na raiz do repositorio, inicia o backend, um servidor local para o frontend e abre a tela de login. O computador precisa ter Java 17+, Maven e Python instalados. Esse arquivo e apenas para uso local; para amigos, envie o link publicado, nao o `.bat`.
