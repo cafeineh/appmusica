@@ -1,0 +1,23 @@
+# Java / Maven
+backend/target/
+backend/.mvn/
+backend/appmusica-data.json
+backend/*.log
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+frontend/config.local.js
+
+# IDE and OS files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak

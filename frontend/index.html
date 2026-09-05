@@ -14,8 +14,9 @@
   <!-- ===== Barra superior ===== -->
   <header class="topo">
     <div class="topo-esquerda">
-      <div class="app-icone"></div>
-      <button class="icone-botao" aria-label="Início" title="Início">
+      <!-- ícone do app: troque por uma <img src="seu-logo.png"> se quiser -->
+      <div class="app-icone" title="App música"></div>
+      <button class="icone-botao" id="btn-home" aria-label="Início" title="Início">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M2 8.5 9 2l7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M4 7.5V16h10V7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -28,8 +29,9 @@
         <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/>
         <line x1="11.2" y1="11.2" x2="15" y2="15" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
       </svg>
-      <input type="text" placeholder="Pesquisar músicas, artistas..." />
-      <button class="icone-botao icone-generos" aria-label="Navegar por gêneros" title="Gêneros">
+      <input type="text" id="campo-busca" placeholder="Pesquisar músicas, artistas ou trecho da letra..." />
+      <div class="sugestoes-busca" id="sugestoes-busca" role="listbox"></div>
+      <button class="icone-botao icone-generos" id="btn-genero" aria-label="Navegar por gêneros" title="Gêneros">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <rect x="1.5" y="2" width="4.5" height="4.5" rx="1" fill="currentColor"/>
           <rect x="10" y="2" width="4.5" height="4.5" rx="1" fill="currentColor" opacity="0.55"/>
@@ -40,6 +42,8 @@
     </div>
 
     <div class="topo-direita">
+      <button class="botao-premium" id="btn-premium"><span class="premium-icone" aria-hidden="true">✦</span>Seja Premium</button>
+
       <div class="popover-wrap">
         <button class="icone-botao" id="btn-notificacoes" aria-label="Notificações" title="Notificações">
           <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
@@ -49,6 +53,7 @@
         </button>
         <div class="popover" id="popover-notificacoes">Nenhuma notificação nova</div>
       </div>
+
       <div class="popover-wrap">
         <button class="icone-botao" id="btn-mensagens" aria-label="Mensagens" title="Mensagens">
           <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
@@ -58,7 +63,20 @@
         </button>
         <div class="popover" id="popover-mensagens">Nenhuma mensagem nova</div>
       </div>
-      <div class="avatar" title="Perfil"></div>
+
+      <div class="popover-wrap">
+        <!-- foto de perfil: troque o background por <img src="sua-foto.jpg"> -->
+        <div class="avatar" id="avatar" title="Perfil"></div>
+        <div class="popover popover-menu" id="popover-perfil">
+          <button data-ir-para="view-conta">Conta</button>
+          <button data-ir-para="view-perfil">Perfil</button>
+          <button data-ir-para="view-amizades">Amizades</button>
+          <button data-ir-para="view-criador">Central do Criador</button>
+          <button data-ir-para="view-configuracoes">Configurações</button>
+          <button data-ir-para="view-suporte">Suporte</button>
+          <button id="btn-sair" class="botao-sair">Sair</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -66,30 +84,27 @@
 
     <!-- ===== Biblioteca lateral ===== -->
     <aside class="biblioteca" id="biblioteca">
-      <button class="biblioteca-toggle" id="btn-expandir" aria-label="Expandir biblioteca" title="Expandir">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M5 3 9 7l-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+      <button class="biblioteca-toggle" id="btn-expandir" aria-label="Expandir biblioteca" title="Expandir/encolher">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M2 5.5 7 9l5-3.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
 
-      <button class="biblioteca-item biblioteca-curtidas" aria-label="Músicas curtidas" title="Curtidas">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M10 17s-6.5-4-6.5-8.7A3.8 3.8 0 0 1 10 6a3.8 3.8 0 0 1 6.5 2.3C16.5 13 10 17 10 17Z"/>
-        </svg>
-        <span class="biblioteca-item-nome">Curtidas</span>
-      </button>
+      <span class="biblioteca-titulo">Sua Biblioteca</span>
 
-      <button class="biblioteca-item playlist-capa playlist-1" aria-label="Playlist">
-        <span class="biblioteca-item-nome">Playlist 1</span>
-      </button>
-      <button class="biblioteca-item playlist-capa playlist-2" aria-label="Playlist">
-        <span class="biblioteca-item-nome">Playlist 2</span>
-      </button>
-      <button class="biblioteca-item playlist-capa playlist-3" aria-label="Playlist">
-        <span class="biblioteca-item-nome">Playlist 3</span>
-      </button>
+      <div class="biblioteca-bloco">
+        <button class="biblioteca-item biblioteca-curtidas" id="btn-curtidas" title="Curtidas">
+          <span class="biblioteca-item-capa biblioteca-item-capa-curtidas">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 17s-6.5-4-6.5-8.7A3.8 3.8 0 0 1 10 6a3.8 3.8 0 0 1 6.5 2.3C16.5 13 10 17 10 17Z"/></svg>
+          </span>
+          <span class="biblioteca-item-nome">Curtidas</span>
+        </button>
+      </div>
 
-      <button class="biblioteca-item biblioteca-nova" id="btn-nova-playlist" aria-label="Criar nova playlist" title="Nova playlist">
+      <!-- Playlists criadas pelo usuário aparecem aqui dinamicamente -->
+      <div id="lista-playlists"></div>
+
+      <button class="biblioteca-item biblioteca-nova" id="btn-nova-playlist" title="Nova playlist">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6">
           <path d="M9 3v12M3 9h12" stroke-linecap="round"/>
         </svg>
@@ -97,60 +112,262 @@
       </button>
     </aside>
 
-    <!-- ===== Conteúdo principal ===== -->
+    <!-- ===== Conteúdo principal (várias "páginas" — só uma visível por vez) ===== -->
     <main class="conteudo">
-      <section class="descubra">
-        <h1>Descubra mais</h1>
-        <p class="subtitulo">recomendações a partir do que você mais ouve</p>
 
-        <div class="cards-recomendacao">
-          <div class="card-recomendacao card-rec-1"><span>Em breve</span></div>
-          <div class="card-recomendacao card-rec-2"><span>Em breve</span></div>
-          <div class="card-recomendacao card-rec-3"><span>Em breve</span></div>
-          <div class="card-recomendacao card-rec-4"><span>Em breve</span></div>
+      <!-- Página: Início / Descubra mais -->
+      <section class="view ativa" id="view-inicio">
+        <div class="view-cabecalho">
+          <div>
+            <span class="eyebrow">Seu espaço musical</span>
+            <h1>Descubra mais</h1>
+            <p class="subtitulo">recomendações a partir do que você mais ouve</p>
+          </div>
+          <div class="controle-layout" role="group" aria-label="Layout da biblioteca">
+            <button class="botao-layout ativo" data-layout="lista" aria-label="Visualização em lista" title="Lista">☰</button>
+            <button class="botao-layout" data-layout="grade" aria-label="Visualização em grade" title="Grade">▦</button>
+            <button class="botao-layout" data-layout="compacto" aria-label="Visualização compacta" title="Compacta">≡</button>
+          </div>
+        </div>
+
+        <div class="cards-recomendacao" id="cards-descubra"></div>
+
+      </section>
+
+      <!-- Página: Busca -->
+      <section class="view" id="view-busca">
+        <h1>Resultados da busca</h1>
+        <ol class="tracklist" id="busca-resultado-lista"></ol>
+      </section>
+
+      <section class="view" id="view-biblioteca">
+        <div class="view-cabecalho">
+          <div>
+            <span class="eyebrow">Sua coleção</span>
+            <h1 id="biblioteca-titulo-view">Curtidas</h1>
+            <p class="subtitulo" id="biblioteca-subtitulo-view">As músicas que você guardou para ouvir depois.</p>
+          </div>
+          <div class="view-acoes" id="biblioteca-acoes"></div>
+        </div>
+        <ol class="tracklist" id="biblioteca-lista"></ol>
+      </section>
+
+      <!-- Página: Gêneros -->
+      <section class="view" id="view-genero">
+        <h1>Gêneros</h1>
+        <div class="tags-genero">
+          <button class="tag-genero" data-genero="Pop">Pop</button>
+          <button class="tag-genero" data-genero="R&B">R&amp;B</button>
+          <button class="tag-genero" data-genero="Rock">Rock</button>
+          <button class="tag-genero" data-genero="Eletrônica">Eletrônica</button>
+          <button class="tag-genero" data-genero="Hip Hop">Hip Hop</button>
+        </div>
+        <h2 class="titulo-secao" id="genero-titulo-resultado">Selecione um gênero acima</h2>
+        <ol class="tracklist" id="genero-resultado-lista"></ol>
+      </section>
+
+      <!-- Página: Conta -->
+      <section class="view" id="view-conta">
+        <h1>Conta</h1>
+        <p class="subtitulo">Gerencie os dados de acesso da sua conta.</p>
+        <div class="cartao-formulario">
+          <label class="campo-label">E-mail</label>
+          <input type="email" class="campo-texto" placeholder="seuemail@exemplo.com" />
+          <label class="campo-label">Nova senha</label>
+          <input type="password" class="campo-texto" placeholder="••••••••" />
+          <button class="botao-primario">Salvar alterações</button>
         </div>
       </section>
 
-      <section class="secao-biblioteca">
-        <h2>Sua Biblioteca</h2>
-
-        <ol id="lista-musicas" class="tracklist">
-          <li data-arquivo="songs/chicago.mp3">
-            <span class="faixa-num">01</span>
-            <span class="faixa-info">
-              <span class="faixa-titulo">Chicago</span>
-              <span class="faixa-artista">Michael Jackson</span>
-            </span>
-            <span class="faixa-duracao">--:--</span>
-          </li>
-          <li data-arquivo="songs/heaven_can_wait.mp3">
-            <span class="faixa-num">02</span>
-            <span class="faixa-info">
-              <span class="faixa-titulo">Heaven Can Wait</span>
-              <span class="faixa-artista">Michael Jackson</span>
-            </span>
-            <span class="faixa-duracao">--:--</span>
-          </li>
-          <li data-arquivo="songs/all_i_want_is_you.mp3">
-            <span class="faixa-num">03</span>
-            <span class="faixa-info">
-              <span class="faixa-titulo">All I Want Is You</span>
-              <span class="faixa-artista">naosei</span>
-            </span>
-            <span class="faixa-duracao">--:--</span>
-          </li>
-        </ol>
+      <!-- Página: Perfil -->
+      <section class="view" id="view-perfil">
+        <h1>Perfil</h1>
+        <p class="subtitulo">Como você aparece para outros usuários.</p>
+        <div class="cartao-formulario">
+          <div class="perfil-foto-linha">
+            <div class="imagem-placeholder imagem-placeholder-redonda" id="preview-foto-perfil"></div>
+            <div>
+              <strong>Foto de perfil</strong>
+              <p class="texto-ajuda">JPG ou PNG. Escolha uma imagem quadrada.</p>
+              <label class="botao-secundario botao-arquivo" for="input-foto-perfil">Escolher foto</label>
+              <input type="file" id="input-foto-perfil" accept="image/*" hidden />
+            </div>
+          </div>
+          <label class="campo-label" for="perfil-nome">Nome de exibição</label>
+          <input type="text" id="perfil-nome" class="campo-texto" placeholder="Seu nome" />
+          <label class="campo-label" for="perfil-username">Nome de usuário</label>
+          <input type="text" id="perfil-username" class="campo-texto" readonly />
+          <label class="campo-label" for="perfil-bio">Bio</label>
+          <textarea id="perfil-bio" class="campo-texto" rows="3" placeholder="Fale um pouco sobre você"></textarea>
+          <div class="formulario-grid">
+            <div class="campo-grupo">
+              <label class="campo-label" for="perfil-genero">Gênero</label>
+              <input type="hidden" id="perfil-genero" />
+              <div class="campo-menu-custom" id="menu-genero">
+                <button type="button" class="campo-select-botao" aria-haspopup="listbox" aria-expanded="false">Selecione <span>⌄</span></button>
+                <div class="campo-select-opcoes" role="listbox">
+                  <button type="button" data-valor="Feminino">Feminino</button>
+                  <button type="button" data-valor="Masculino">Masculino</button>
+                  <button type="button" data-valor="Não-binário">Não-binário</button>
+                  <button type="button" data-valor="Prefiro não informar">Prefiro não informar</button>
+                </div>
+              </div>
+            </div>
+            <div class="campo-grupo">
+              <label class="campo-label" for="perfil-pronomes">Pronomes</label>
+              <input type="text" id="perfil-pronomes" class="campo-texto" placeholder="Ex: ela/dela" />
+            </div>
+            <div class="campo-grupo campo-grupo-largo">
+              <label class="campo-label" for="perfil-aniversario">Data de aniversário <span>visível apenas para você</span></label>
+              <input type="hidden" id="perfil-aniversario" />
+              <div class="campo-menu-custom campo-data-custom" id="menu-aniversario">
+                <button type="button" class="campo-select-botao" aria-haspopup="dialog" aria-expanded="false">Selecione sua data <span>⌄</span></button>
+                <div class="calendario-custom" role="dialog" aria-label="Selecionar data de aniversário"></div>
+              </div>
+            </div>
+          </div>
+          <button class="botao-primario" id="salvar-perfil">Salvar perfil</button>
+        </div>
       </section>
+
+      <!-- Página: Configurações -->
+      <section class="view" id="view-configuracoes">
+        <h1>Configurações</h1>
+        <p class="subtitulo">Ajuste a experiência do seu espaço musical.</p>
+        <div class="configuracoes-grid">
+          <div class="cartao-configuracao">
+            <span class="config-icone">◐</span>
+            <div><h2>Aparência</h2><p>O tema escuro mantém o foco na música.</p></div>
+            <label class="chave-opcao"><span>Tema escuro</span><input type="checkbox" checked id="config-tema" /><i></i></label>
+          </div>
+          <div class="cartao-configuracao">
+            <span class="config-icone">▶</span>
+            <div><h2>Reprodução</h2><p>Defina como suas faixas continuam tocando.</p></div>
+            <label class="chave-opcao"><span>Reprodução automática</span><input type="checkbox" checked id="config-autoplay" /><i></i></label>
+          </div>
+          <div class="cartao-configuracao">
+            <span class="config-icone">@</span>
+            <div><h2>Notificações</h2><p>Receba novidades sobre sua conta.</p></div>
+            <label class="chave-opcao"><span>Notificações por e-mail</span><input type="checkbox" id="config-email" /><i></i></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-amizades">
+        <span class="eyebrow">Conexões</span>
+        <h1>Amizades</h1>
+        <p class="subtitulo">Encontre pessoas e compartilhe descobertas musicais.</p>
+        <div class="cartao-formulario amizade-busca"><label class="campo-label" for="campo-amigos">Encontrar amigos</label><input id="campo-amigos" class="campo-texto" placeholder="Digite o nome de usuário" /><button class="botao-primario" id="btn-encontrar-amigos">Buscar pessoas</button></div>
+        <div class="estado-vazio" id="resultado-amigos">Sua lista de amizades aparecerá aqui.</div>
+      </section>
+
+      <!-- Página: Suporte -->
+      <section class="view" id="view-suporte">
+        <h1>Suporte</h1>
+        <div class="cartao-formulario">
+          <p class="subtitulo">Precisa de ajuda? Descreva o problema abaixo.</p>
+          <textarea class="campo-texto" rows="4" placeholder="Descreva sua dúvida ou problema..."></textarea>
+          <button class="botao-primario">Enviar mensagem</button>
+        </div>
+      </section>
+
+      <!-- Página: Premium -->
+      <section class="view" id="view-premium">
+        <h1>Seja Premium</h1>
+        <p class="subtitulo">Exemplo de página de planos — ajuste preços e benefícios reais depois.</p>
+        <div class="planos">
+          <div class="plano">
+            <h3>Gratuito</h3>
+            <p class="plano-preco">R$ 0</p>
+            <ul><li>Com anúncios</li><li>Qualidade padrão</li></ul>
+          </div>
+          <div class="plano plano-destaque">
+            <h3>Premium</h3>
+            <p class="plano-preco">R$ 0,00 <span>(defina o valor)</span></p>
+            <ul><li>Sem anúncios</li><li>Qualidade alta</li><li>Download offline</li></ul>
+            <button class="botao-primario">Assinar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Página: Central do Criador -->
+      <section class="view" id="view-criador">
+        <h1>Central do Criador</h1>
+        <p class="subtitulo">Envie suas músicas e gerencie seu conteúdo.</p>
+
+        <div class="cartao-formulario cartao-criador">
+          <div class="formulario-cabecalho">
+            <div>
+              <span class="eyebrow">Novo lançamento</span>
+              <h2 class="titulo-secao">Enviar música</h2>
+              <p class="texto-ajuda">Organize os dados da faixa e publique uma prévia no seu catálogo.</p>
+            </div>
+          </div>
+          <form id="form-upload-musica">
+            <div class="formulario-grid">
+              <div class="campo-grupo campo-grupo-largo">
+                <label class="campo-label" for="upload-titulo">Título</label>
+                <input type="text" id="upload-titulo" class="campo-texto" required />
+              </div>
+              <div class="campo-grupo">
+                <label class="campo-label" for="upload-artista">Artista</label>
+                <input type="text" id="upload-artista" class="campo-texto" required />
+              </div>
+              <div class="campo-grupo">
+                <label class="campo-label" for="upload-genero">Gênero</label>
+                <input type="text" id="upload-genero" class="campo-texto" placeholder="Ex: Pop" />
+              </div>
+              <div class="campo-grupo campo-grupo-largo">
+                <label class="campo-label" for="upload-letra">Letra <span>(opcional)</span></label>
+                <textarea id="upload-letra" class="campo-texto" rows="5" placeholder="Cole a letra da música"></textarea>
+              </div>
+              <div class="campo-grupo">
+                <label class="campo-label" for="upload-capa">Capa da música</label>
+                <input type="file" id="upload-capa" accept="image/*" class="campo-arquivo" />
+              </div>
+              <div class="campo-grupo">
+                <label class="campo-label" for="upload-arquivo">Arquivo de áudio</label>
+                <input type="file" id="upload-arquivo" accept="audio/*" class="campo-arquivo" required />
+              </div>
+            </div>
+            <div class="formulario-rodape">
+              <span class="texto-ajuda">Formatos aceitos: áudio e imagem do dispositivo.</span>
+              <button type="submit" class="botao-primario">Publicar música</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="cartao-formulario">
+          <h2 class="titulo-secao">Criar álbum</h2>
+          <label class="campo-label" for="album-nome">Nome do álbum</label>
+          <input type="text" id="album-nome" class="campo-texto" placeholder="Nome do álbum" />
+          <label class="campo-label" for="album-capa">Capa do álbum</label>
+          <label class="imagem-placeholder imagem-placeholder-quadrada seletor-capa" id="preview-capa-album" for="album-capa">
+            <span class="seletor-capa-mais">+</span>
+          </label>
+          <input type="file" id="album-capa" accept="image/*" class="campo-arquivo campo-arquivo-oculto" />
+          <button class="botao-secundario" id="criar-album">Criar álbum</button>
+        </div>
+
+        <div class="cartao-formulario">
+          <h2 class="titulo-secao">Estatísticas</h2>
+          <p class="estado-vazio">Em breve: ouvintes, reproduções e ganhos aparecerão aqui quando o backend estiver conectado.</p>
+        </div>
+      </section>
+
     </main>
   </div>
 
   <!-- ===== Player fixo ===== -->
   <footer class="tocador">
-    <div class="tocador-info">
-      <div class="capa-atual" id="capa-atual"></div>
+    <div class="tocador-info" id="tocador-info">
+      <div class="capa-atual" id="capa-atual">
+        <span class="vinil" aria-hidden="true"><span class="vinil-disco"></span></span>
+        <span class="capa-atual-imagem"></span>
+      </div>
       <div class="tocador-textos">
-        <span id="tocando-agora" class="tocador-faixa">Nome música</span>
-        <span id="tocando-autor" class="tocador-autor">Autor</span>
+        <span id="tocando-agora" class="tocador-faixa"></span>
+        <span id="tocando-autor" class="tocador-autor"></span>
       </div>
       <button class="icone-botao icone-pequeno" id="btn-curtir" aria-label="Curtir">
         <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -192,17 +409,34 @@
           <path d="m9.5 1 2 2-2 2M6.5 15l-2-2 2-2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <button class="icone-botao icone-pequeno" id="btn-volume" aria-label="Volume">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3">
-          <path id="icone-volume-alto" d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor" stroke="none"/>
-          <path id="onda-volume" d="M10.5 5.5a3 3 0 0 1 0 5" stroke-linecap="round"/>
-        </svg>
-      </button>
+      <div class="popover-wrap">
+        <button class="icone-botao icone-pequeno" id="btn-volume" aria-label="Volume">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M2 6h2.5L8 3v10L4.5 10H2z" fill="currentColor" stroke="none"/>
+            <path d="M10.5 5.5a3 3 0 0 1 0 5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="popover popover-volume" id="popover-volume">
+          <input type="range" id="slider-volume" min="0" max="100" value="100" />
+        </div>
+      </div>
     </div>
 
     <audio id="player"></audio>
   </footer>
 
+  <!-- ===== Modal genérico (nova playlist, adicionar à playlist, avisos) ===== -->
+  <div class="modal-fundo" id="modal-fundo">
+    <div class="modal">
+      <div class="modal-cabecalho">
+        <h3 id="modal-titulo">Título</h3>
+        <button id="modal-fechar" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-corpo" id="modal-corpo"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
