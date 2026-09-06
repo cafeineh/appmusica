@@ -1,3 +1,3 @@
 window.APP_CONFIG = {
-  API_BASE: "http://localhost:8080/api",
+  API_BASE: "https://appmusica-api.onrender.com/api",
 };
