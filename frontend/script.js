@@ -11,15 +11,11 @@ function escaparHtml(valor) {
 }
 
 /* =========================================================
-   PROTEÇÃO DE ACESSO (mock)
-   Se não houver "login" salvo localmente, manda pra tela de
-   login. Lembre-se: isso não é segurança real (ver aviso em
-   login.js) — é só pra simular o fluxo de app com login.
+   PROTEÇÃO DE ACESSO
+   A página principal só pode ser aberta depois do login.
 ========================================================= */
-// O Live Server usa outra origem do arquivo local. O app continua em modo
-// visitante para não perder a tela ao trocar entre file:// e http://.
-if (localStorage.getItem("appmusica_logado") !== "true") {
-  localStorage.setItem("appmusica_logado", "true");
+if (!localStorage.getItem("appmusica_token")) {
+  window.location.replace("login.html");
 }
 
 /* =========================================================
@@ -842,6 +838,10 @@ document.getElementById("btn-sair").addEventListener("click", (evento) => {
   document.getElementById("cancelar-saida").addEventListener("click", fecharModal);
   document.getElementById("confirmar-saida").addEventListener("click", () => {
     localStorage.removeItem("appmusica_logado");
+    localStorage.removeItem("appmusica_token");
+    localStorage.removeItem("appmusica_nome");
+    localStorage.removeItem("appmusica_username");
+    localStorage.removeItem("appmusica_email");
     window.location.href = "login.html";
   });
 });
